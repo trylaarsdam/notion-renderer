@@ -74,27 +74,27 @@ const Modal = dynamic(
 );
 
 import { GetServerSideProps } from "next";
-import { Loader } from "@mantine/core";
+import { Loader, Group } from "@mantine/core";
 
 export const getServerSideProps: GetServerSideProps = async ({
-	params,
-	res,
-  }) => {
-	const pageId = params?.pageId as string;
+  params,
+  res,
+}) => {
+  const pageId = params?.pageId as string;
 
-	return {
-	  props: {
-		pageId,
-	  },
-	};
+  return {
+    props: {
+      pageId,
+    },
   };
+};
 
 export default function Page({ pageId }) {
   const router = useRouter();
   const [recordMap, setRecordMap] = useState<any>(null);
 
   useEffect(() => {
-	console.log(pageId)
+    console.log(pageId);
     onAuthStateChanged(auth, async (user) => {
       if (user) {
         // User is signed in, see docs for a list of available properties
@@ -125,7 +125,7 @@ export default function Page({ pageId }) {
   }, []);
 
   if (!recordMap) {
-    return <Loader />; // or return some loading state
+    return <Group mt={50} justify="center"><Loader /></Group> ; // or return some loading state
   }
 
   return (

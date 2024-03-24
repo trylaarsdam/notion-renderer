@@ -18,7 +18,7 @@ export default function CoursesPage() {
   const [courses, setCourses] = useState<any>([]);
 
   useEffect(() => {
-    onAuthStateChanged(auth, (user) => {
+    onAuthStateChanged(auth, async (user) => {
       if (user) {
         // User is signed in, see docs for a list of available properties
         // https://firebase.google.com/docs/reference/js/firebase.User
@@ -31,24 +31,23 @@ export default function CoursesPage() {
         router.push("/login");
         console.log("user is logged out");
       }
+
+	  var result = await fetch("http://localhost:3001/enrollments/my", {
+		headers: {
+			"Authorization": `${await auth.currentUser?.getIdToken()}`,
+		}
+	  })
+
+	  if (result.status !== 200) {
+		console.log("error retreiving courses")
+		return
+	  }
+	  else {
+		var data = await result.json()
+		console.log(data)
+		setCourses(data)
+	  }
     });
-  }, []);
-
-  useEffect(() => {
-    // This is where you would typically load data from an API
-    const loadedCourses = [
-      {
-        id: 1,
-        title: "Course 1",
-        description: "This is course 1",
-        score: "94%",
-        image: "https://fakeimg.pl/600x200?text=Course+Cover+Image",
-        // ...other properties
-      },
-      // ...other courses
-    ];
-
-    setCourses(loadedCourses);
   }, []);
 
   return (
@@ -62,10 +61,10 @@ export default function CoursesPage() {
             <CourseCard
               key={course.id}
               id={course.id}
-              title={course.title}
+              name={course.name}
               description={course.description}
               image={course.image}
-              score={course.score}
+              points={course.points}
               // pass other properties as props
             />
           ))}

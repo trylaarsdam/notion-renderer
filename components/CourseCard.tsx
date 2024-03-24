@@ -3,7 +3,7 @@ import classes from './CourseCard.module.css';
 import Link from 'next/link';
 
 const stats = [
-  { title: 'Score' },
+  { title: 'Points' },
 ];
 
 interface CourseCardProps {
@@ -14,14 +14,14 @@ interface CourseCardProps {
 	score: string;
 }
 
-export function CourseCard({id, title, description, image, score}) {
+export function CourseCard({id, name, description, image, points}) {
   var items = stats.map((stat) => (
     <div key={stat.title}>
       <Text size="xs" color="dimmed">
         {stat.title}
       </Text>
       <Text fw={500} size="sm">
-        {score}
+        {points}
       </Text>
     </div>
   ));
@@ -46,7 +46,7 @@ export function CourseCard({id, title, description, image, score}) {
 
       <Group justify="space-between" mt="md">
         <Text fz="lg" fw={700} className={classes.title}>
-          {title}
+          {name}
         </Text>
         {/* <Group gap={5}>
           <Text fz="xs" c="dimmed">

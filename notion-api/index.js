@@ -22,6 +22,8 @@ admin.initializeApp({
 	credential: admin.credential.cert(serviceAccount),
 });
 
+const db = admin.firestore();
+
 const authenticateUser = async (req, res, next) => {
 	const idToken = req.headers.authorization;
 	try {
@@ -88,6 +90,34 @@ app.get("/notion/auth/redirect", async (req, res) => {
 	await fs.promises.writeFile("./notion-oauth.json", JSON.stringify(notionOAuth, null, 2))
 
 	res.redirect("http://localhost:3000")
+})
+
+app.get("/enrollments/my", authenticateUser, async (req, res) => {
+	const user = req.user;
+	var queryResult = db.collection("Enrollment").where("userID", "==", user.uid)
+	var querySnapshot = await queryResult.get();
+	var enrollments = [];
+	querySnapshot.forEach((doc) => {
+		enrollments.push(doc.data());
+	})
+	var courses = [];
+
+	if (enrollments.length != 0) {
+		var coursesQuery = db.collection("Course").where("id", "in", enrollments.map((enrollment) => enrollment.courseID))
+		var coursesQuerySnapshot = await coursesQuery.get();
+		coursesQuerySnapshot.forEach((doc) => {
+			courses.push(doc.data());
+		})
+	}
+
+	res.json(courses);
+})
+
+app.get("/course/:id", authenticateUser, async (req, res) => {
+	const courseID = req.params.id;
+	var courseDoc = await db.collection("Course").doc(courseID).get();
+	var course = courseDoc.data();
+	res.json(course);
 })
 
 app.listen(3001, () => {
