@@ -1,0 +1,22 @@
+/* App.css */
+.container {
+  display: flex;
+}
+
+.navbar {
+  width: 80px; /* Adjust as needed */
+  height: 100vh;
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0;
+}
+
+.main {
+  flex-grow: 1;
+}
+* {
+	box-sizing: border-box;
+	margin: 0;
+	padding: 0;
+	overscroll-behavior-y: none;
+  }

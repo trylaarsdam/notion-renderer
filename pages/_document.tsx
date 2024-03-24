@@ -1,5 +1,6 @@
 import { Html, Head, Main, NextScript } from "next/document";
 import { ColorSchemeScript } from "@mantine/core";
+import { DoubleNavbar } from "../components/DoubleNavbar";
 
 export default function Document() {
   return (

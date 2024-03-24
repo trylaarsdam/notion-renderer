@@ -1,9 +1,17 @@
-import { Button, Group } from "@mantine/core";
+import { Button, Group, Text } from "@mantine/core";
+import Link from "next/link";
 
 export default function IndexPage() {
   return (
-    <Group mt={50} justify="center">
-      <Button size="xl">Welcome to Mantine!</Button>
-    </Group>
+	<div>
+		<Group mt={50} justify="center">
+			<h1>Notion... but it&apos;s in an LMS</h1>
+    	</Group>
+		<Group mt={10} justify="center">
+			<Link href="/page/067dd719a912471ea9a3ac10710e7fdf">
+				<Button size="md">View sample notion page</Button>
+			</Link>
+    	</Group>
+	</div>
   );
 }
