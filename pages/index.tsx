@@ -5,7 +5,7 @@ export default function IndexPage() {
   return (
 	<div>
 		<Group mt={50} justify="center">
-			<h1>Notion... but it&apos;s in an LMS</h1>
+			<h1>Notion... but it&apos;s in a custom webapp</h1>
     	</Group>
 		<Group mt={10} justify="center">
 			<Link href="/page/067dd719a912471ea9a3ac10710e7fdf">
