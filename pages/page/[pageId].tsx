@@ -100,6 +100,7 @@ export default function Page({ recordMap }) {
       recordMap={recordMap}
       fullPage={true}
       darkMode={false}
+	  disableHeader={true}
       components={{
         Code,
         Collection,
