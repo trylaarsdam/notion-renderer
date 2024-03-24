@@ -145,8 +145,11 @@ export default function Page({ pageId }) {
       }}
       mapPageUrl={(pageId) => `/page/${pageId}`}
       mapImageUrl={(url, block) =>
-        `https://api.lms.toddr.org/image/${block.id}?workspace=${url.split("/")[3]}`
+        `https://api.lms.toddr.org/image/${encodeURIComponent(url)}?id=${block.id}&cache=v2&table=block`
       }
+	//   mapImageUrl={(url, block) => 
+	// 	JSON.stringify(block)
+	//   }
     />
   );
 }

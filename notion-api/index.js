@@ -39,35 +39,30 @@ const authenticateUser = async (req, res, next) => {
 app.get('/page/:pageId', authenticateUser, async (req, res) => {
 	try {
 		const pageId = req.params.pageId;
-		const recordMap = await notion.getPage(pageId);
+		const recordMap = await notion.getPage(pageId, {signFileUrls: true});
 		res.json(recordMap);
 	} catch (err) {
 		res.status(500).json({ error: err.message });
 	}
-
 });
 
 app.get("/image/:id", async (req, res) => {
 	const blockID = req.params.id;
-	const workspace = req.query.workspace
-	// console.log(blockID)
-	// console.log(workspace)
-	var result = await fetch(`https://api.notion.com/v1/blocks/${blockID}`, {
-		headers: {
-			"Authorization": `Bearer ${notionOAuth.tokens[workspace]}`,
-			"Notion-Version": "2022-06-28"
-		}
-	})
-	var json = await result.json();
 
-	// console.log(json)
+	console.log(blockID)
+	var headers = {}
+	headers.Cookie = "__cf_bm=DdXn9cIqMcUlhHfo7YYemQFB9H7sDAQiK0ODVZBOdC4-1711303012-1.0.1.1-qf3WSigAYTU2jRWpM1OkO9HbkvgpQZN5PGHOxVnVNuZtVeLRmpZOchLHL63kJTroZLeVreePz0eKYrP0dlhCFg; _cfuvid=Z7Q9V16Lex9St8hXT0bDYSDGd4ezmWJLtX.lYaNVi0w-1711234509468-0.0.1.1-604800000; device_id=698055d5-260a-4b57-bd9f-a1bc22d15791; notion_browser_id=3ae54f5c-896c-47fb-a958-65199555f6e3; notion_check_cookie_consent=false; token_v2=" + notionOAuth.userToken
+	// console.log(url)
+	// console.log(headers)
+	console.log(req.query)
+	var url = "https://www.notion.so/image/" + encodeURIComponent(blockID) + "?" + new URLSearchParams({"table": req.query.table, "id": req.query.id, "cache": req.query.cache})
+	var image = await fetch(url, {headers: headers})
 
-	try {
-		res.redirect(json.image.file.url);
-	}
-	catch (err) {
-		res.status(500).send({ error: err.message });
-	}
+	// pipe the image to the response
+	const imageBuffer = await image.arrayBuffer()
+	console.log(imageBuffer)
+	res.set("Content-Type", image.headers.get("Content-Type"))
+	res.send(Buffer.from(imageBuffer));
 })
 
 app.get("/notion/auth/redirect", async (req, res) => {
