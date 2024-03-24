@@ -1,10 +1,14 @@
-'use client'
+"use client";
 
 import * as React from "react";
+import { useEffect, useState } from "react";
 import { NotionRenderer } from "react-notion-x";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/router";
+import { onAuthStateChanged } from "firebase/auth";
 
+import { auth } from "../../firebase";
 import dynamic from "next/dynamic";
 
 const Code = dynamic(() =>
@@ -37,7 +41,7 @@ const Code = dynamic(() =>
       import("prismjs/components/prism-sass.js"),
       import("prismjs/components/prism-scss.js"),
       import("prismjs/components/prism-solidity.js"),
-	  import("prismjs/components/prism-verilog.js"),
+      import("prismjs/components/prism-verilog.js"),
       import("prismjs/components/prism-sql.js"),
       import("prismjs/components/prism-stylus.js"),
       import("prismjs/components/prism-swift.js"),
@@ -70,37 +74,66 @@ const Modal = dynamic(
 );
 
 import { GetServerSideProps } from "next";
+import { Loader } from "@mantine/core";
 
-// getServerSideProps
 export const getServerSideProps: GetServerSideProps = async ({
-  params,
-  res,
-}) => {
-  const pageId = params?.pageId as string;
-  const response = await fetch(`http://localhost:3001/page/${pageId}`);
+	params,
+	res,
+  }) => {
+	const pageId = params?.pageId as string;
 
-  if (response.status !== 200) {
-    res.writeHead(302, { Location: "/404" });
-    res.end();
-    return { props: {} };
+	return {
+	  props: {
+		pageId,
+	  },
+	};
+  };
+
+export default function Page({ pageId }) {
+  const router = useRouter();
+  const [recordMap, setRecordMap] = useState<any>(null);
+
+  useEffect(() => {
+	console.log(pageId)
+    onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        // User is signed in, see docs for a list of available properties
+        // https://firebase.google.com/docs/reference/js/firebase.User
+        const uid = user.uid;
+        // ...
+        console.log("uid", uid);
+      } else {
+        // User is signed out
+        // ...
+        router.push("/login");
+        console.log("user is logged out");
+      }
+
+      const response = await fetch(`http://localhost:3001/page/${pageId}`, {
+        headers: {
+          Authorization: `${await auth.currentUser?.getIdToken()}`,
+        },
+      });
+
+      if (response.status !== 200) {
+        router.push("/login");
+      }
+
+      var result = await response.json();
+      setRecordMap(result);
+    });
+  }, []);
+
+  if (!recordMap) {
+    return <Loader />; // or return some loading state
   }
 
-  const recordMap = await response.json();
-
-  return {
-    props: {
-      recordMap,
-    },
-  };
-};
-
-export default function Page({ recordMap }) {
   return (
     <NotionRenderer
       recordMap={recordMap}
       fullPage={true}
       darkMode={false}
-	  disableHeader={true}
+      disableHeader={true}
       components={{
         Code,
         Collection,
@@ -110,8 +143,10 @@ export default function Page({ recordMap }) {
         nextImage: Image,
         nextLink: Link,
       }}
-	  mapPageUrl= { (pageId) => `/page/${pageId}` }
-	  mapImageUrl={(url, block) => `http://localhost:3001/image/${block.id}?workspace=${url.split("/")[3]}`}
+      mapPageUrl={(pageId) => `/page/${pageId}`}
+      mapImageUrl={(url, block) =>
+        `http://localhost:3001/image/${block.id}?workspace=${url.split("/")[3]}`
+      }
     />
   );
 }

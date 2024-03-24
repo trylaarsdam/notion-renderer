@@ -5,18 +5,36 @@ import cors from 'cors';
 import { Client } from '@notionhq/client';
 import notionOAuth from "./notion-oauth.json" with { type: "json" };
 import fs from "fs";
+import admin from 'firebase-admin';
 
-console.log(process.env.NOTION_TOKEN_V2)
+// console.log(process.env.NOTION_TOKEN_V2)
 
 const notion = new NotionAPI({
 	activeUser: "1806fc31-46dc-4304-a199-e4ea1b9c0e3f",
-	authToken: process.env.NOTION_TOKEN_V2
+	authToken: notionOAuth.userToken
 });
 
 const app = express();
 app.use(cors());
 
-app.get('/page/:pageId', async (req, res) => {
+import serviceAccount from "./lms-backend-firebase.json" with { type: "json" };
+admin.initializeApp({
+	credential: admin.credential.cert(serviceAccount),
+});
+
+const authenticateUser = async (req, res, next) => {
+	const idToken = req.headers.authorization;
+	try {
+		const decodedToken = await admin.auth().verifyIdToken(idToken);
+		req.user = decodedToken;
+		console.log(req.user)
+		next();
+	} catch (error) {
+		res.status(401).json({ error: "Unauthorized" });
+	}
+};
+
+app.get('/page/:pageId', authenticateUser, async (req, res) => {
 	try {
 		const pageId = req.params.pageId;
 		const recordMap = await notion.getPage(pageId);
@@ -24,7 +42,7 @@ app.get('/page/:pageId', async (req, res) => {
 	} catch (err) {
 		res.status(500).json({ error: err.message });
 	}
-	
+
 });
 
 app.get("/image/:id", async (req, res) => {
@@ -39,7 +57,7 @@ app.get("/image/:id", async (req, res) => {
 		}
 	})
 	var json = await result.json();
-	
+
 	// console.log(json)
 
 	try {
