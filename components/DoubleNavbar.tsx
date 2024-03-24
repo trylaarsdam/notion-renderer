@@ -92,7 +92,7 @@ export function DoubleNavbar() {
   return (
     <nav className={classes.navbar}>
       <Center>
-        <Image alt="logo" src="http://toddr.org/assets/images/t-logo.png"/>
+        <Image alt="logo" src="https://toddr.org/assets/images/t-logo.png"/>
       </Center>
 
       <div className={classes.navbarMain}>

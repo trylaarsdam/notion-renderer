@@ -23,7 +23,7 @@ export default function App({ Component, pageProps }: any) {
           name="viewport"
           content="minimum-scale=1, initial-scale=1, width=device-width, user-scalable=no"
         />
-        <link rel="shortcut icon" href="http://toddr.org/assets/images/t-logo.png" />
+        <link rel="shortcut icon" href="https://toddr.org/assets/images/t-logo.png" />
       </Head>
 	  <div className="container">
 	  <nav className="navbar">
