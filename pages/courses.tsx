@@ -34,7 +34,7 @@ export default function CoursesPage() {
         console.log("user is logged out");
       }
 
-      var result = await fetch("https://api.lms.toddr.org/enrollments/my", {
+      var result = await fetch("http://localhost:3001/enrollments/my", {
         headers: {
           Authorization: `${await auth.currentUser?.getIdToken()}`,
         },
