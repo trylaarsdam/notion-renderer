@@ -7,11 +7,11 @@ export default function IndexPage() {
 		<Group mt={50} justify="center">
 			<h1>Notion... but it&apos;s in a custom webapp</h1>
     	</Group>
-		<Group mt={10} justify="center">
+		{/* <Group mt={10} justify="center">
 			<Link href="/page/067dd719a912471ea9a3ac10710e7fdf">
 				<Button size="md">View sample notion page</Button>
 			</Link>
-    	</Group>
+    	</Group> */}
 		<Group mt={10} justify="center">
 			<Link href="/login">
 				<Button size="md" mr={30}>Login</Button>
