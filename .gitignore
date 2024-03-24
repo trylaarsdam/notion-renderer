@@ -130,3 +130,6 @@ dist
 .pnp.*
 
 .DS_Store
+
+notion-api/notion-oauth.json
+notion-api/lms-backend-firebase.json
