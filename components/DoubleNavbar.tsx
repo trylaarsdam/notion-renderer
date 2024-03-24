@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { signOut } from "firebase/auth";
 import { auth } from "../firebase";
 import { useRouter } from "next/router";
-import { Center, Tooltip, UnstyledButton, Stack, rem } from "@mantine/core";
+import { Center, Tooltip, UnstyledButton, Stack, rem, Image } from "@mantine/core";
 import Link from "next/link";
 import {
   IconHome2,
@@ -92,7 +92,7 @@ export function DoubleNavbar() {
   return (
     <nav className={classes.navbar}>
       <Center>
-        <MantineLogo type="mark" inverted size={30} />
+        <Image alt="logo" src="http://toddr.org/assets/images/t-logo.png"/>
       </Center>
 
       <div className={classes.navbarMain}>

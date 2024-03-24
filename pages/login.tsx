@@ -52,7 +52,7 @@ const Login = () => {
         Login
       </Title>
       <Text c="dimmed" size="sm" ta="center" mt={5}>
-        Do not have an account yet?{" "}
+        Don&apos;t have an account yet?{" "}
 		<Link href="/signup">
 			<Anchor size="sm" component="button">
 			Create account
