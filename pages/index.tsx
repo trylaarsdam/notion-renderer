@@ -12,6 +12,12 @@ export default function IndexPage() {
 				<Button size="md">View sample notion page</Button>
 			</Link>
     	</Group>
+		<Group mt={10} justify="center">
+			<Link href="/login">
+				<Button size="md" mr={30}>Login</Button>
+				<Button size="md">Signup</Button>
+			</Link>
+    	</Group>
 	</div>
   );
 }
