@@ -112,7 +112,7 @@ const Page = ({pageId, courseId}) => {
         console.log("user is logged out");
       }
 
-      const response = await fetch(`http://localhost:3001/page/${pageId}`, {
+      const response = await fetch(`https://api.lms.toddr.org/page/${pageId}`, {
         headers: {
           Authorization: `${await auth.currentUser?.getIdToken()}`,
         },
@@ -152,7 +152,7 @@ const Page = ({pageId, courseId}) => {
       }}
       mapPageUrl={(pageId) => `/course/${courseId}/page/${pageId}`}
       mapImageUrl={(url, block) =>
-        `http://localhost:3001/image/${encodeURIComponent(url)}?id=${
+        `https://api.lms.toddr.org/image/${encodeURIComponent(url)}?id=${
           block.id
         }&cache=v2&table=block`
       }

@@ -65,7 +65,7 @@ export function NavbarSimple({}) {
         const uid = user.uid;
         // ...
         console.log("uid", uid);
-        var response = await fetch(`http://localhost:3001/course/${courseId}`, {
+        var response = await fetch(`https://api.lms.toddr.org/course/${courseId}`, {
           headers: {
             Authorization: `${await auth.currentUser?.getIdToken()}`,
           },

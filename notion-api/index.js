@@ -83,7 +83,7 @@ app.get("/notion/auth/redirect", async (req, res) => {
 		code: code,
 		client_id: notionOAuth.clientID,
 		client_secret: notionOAuth.clientSecret,
-		redirect_uri: "http://localhost:3001/notion/auth/redirect",
+		redirect_uri: "https://api.lms.toddr.org/notion/auth/redirect",
 		grant_type: "authorization_code"
 	})
 	// console.log(response)
@@ -134,5 +134,5 @@ app.get("/course/:id", authenticateUser, async (req, res) => {
 })
 
 app.listen(3001, () => {
-	console.log('Server started on http://localhost:3001');
+	console.log('Server started on https://api.lms.toddr.org');
 })

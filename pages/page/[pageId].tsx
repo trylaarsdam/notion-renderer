@@ -109,7 +109,7 @@ export default function Page({ pageId }) {
         console.log("user is logged out");
       }
 
-      const response = await fetch(`http://localhost:3001/page/${pageId}`, {
+      const response = await fetch(`https://api.lms.toddr.org/page/${pageId}`, {
         headers: {
           Authorization: `${await auth.currentUser?.getIdToken()}`,
         },
@@ -145,7 +145,7 @@ export default function Page({ pageId }) {
       }}
       mapPageUrl={(pageId) => `/page/${pageId}`}
       mapImageUrl={(url, block) =>
-        `http://localhost:3001/image/${encodeURIComponent(url)}?id=${block.id}&cache=v2&table=block`
+        `https://api.lms.toddr.org/image/${encodeURIComponent(url)}?id=${block.id}&cache=v2&table=block`
       }
 	//   mapImageUrl={(url, block) => 
 	// 	JSON.stringify(block)
