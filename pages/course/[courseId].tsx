@@ -52,7 +52,7 @@ export default function CoursePage({ courseId }) {
       }
 
       var result = await response.json();
-      router.replace("/page/" + result.home)
+      router.replace(`/course/${courseId}/page/${result.home}`)
     });
 
     // load course data

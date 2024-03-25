@@ -15,6 +15,7 @@ import 'prismjs/themes/prism-tomorrow.css'
 import 'katex/dist/katex.min.css'
 
 export default function App({ Component, pageProps }: any) {
+	const getLayout = Component.getLayout || ((page) => page);
   return (
     <MantineProvider theme={theme}>
       <Head>
@@ -30,7 +31,7 @@ export default function App({ Component, pageProps }: any) {
 		<DoubleNavbar />
 	  </nav>
 	  <div className="main">
-	  <Component {...pageProps} />
+		{getLayout(<Component {...pageProps} />)}
 	  </div>
 	  </div>
 	</MantineProvider>
