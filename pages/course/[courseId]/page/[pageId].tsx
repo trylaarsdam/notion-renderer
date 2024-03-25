@@ -1,4 +1,3 @@
-"use client";
 
 import * as React from "react";
 import { useEffect, useState } from "react";
@@ -87,17 +86,18 @@ export const getServerSideProps: GetServerSideProps = async ({
   return {
     props: {
       pageId,
-	  courseId,
+      courseId,
     },
   };
 };
 
-const Page = ({ pageId, courseId }) => {
+const Page = ({pageId, courseId}) => {
   const router = useRouter();
   const [recordMap, setRecordMap] = useState<any>(null);
 
   useEffect(() => {
-    console.log(pageId);
+	console.log(pageId);
+
     onAuthStateChanged(auth, async (user) => {
       if (user) {
         // User is signed in, see docs for a list of available properties
@@ -112,7 +112,7 @@ const Page = ({ pageId, courseId }) => {
         console.log("user is logged out");
       }
 
-      const response = await fetch(`https://api.lms.toddr.org/page/${pageId}`, {
+      const response = await fetch(`http://localhost:3001/page/${pageId}`, {
         headers: {
           Authorization: `${await auth.currentUser?.getIdToken()}`,
         },
@@ -128,7 +128,11 @@ const Page = ({ pageId, courseId }) => {
   }, []);
 
   if (!recordMap) {
-    return <Group mt={50} justify="center"><Loader /></Group> ; // or return some loading state
+    return (
+      <Group mt={50} justify="center">
+        <Loader />
+      </Group>
+    ); // or return some loading state
   }
 
   return (
@@ -148,17 +152,19 @@ const Page = ({ pageId, courseId }) => {
       }}
       mapPageUrl={(pageId) => `/course/${courseId}/page/${pageId}`}
       mapImageUrl={(url, block) =>
-        `https://api.lms.toddr.org/image/${encodeURIComponent(url)}?id=${block.id}&cache=v2&table=block`
+        `http://localhost:3001/image/${encodeURIComponent(url)}?id=${
+          block.id
+        }&cache=v2&table=block`
       }
-	//   mapImageUrl={(url, block) => 
-	// 	JSON.stringify(block)
-	//   }
+      //   mapImageUrl={(url, block) =>
+      // 	JSON.stringify(block)
+      //   }
     />
   );
-}
+};
 
 Page.getLayout = (page) => {
-	return <CoursePageLayout>{page}</CoursePageLayout>;
-}
+  return <CoursePageLayout>{page}</CoursePageLayout>;
+};
 
 export default Page;

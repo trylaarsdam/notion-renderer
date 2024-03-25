@@ -24,14 +24,18 @@ admin.initializeApp({
 
 const db = admin.firestore();
 
+var coursesCache = []
+
 const authenticateUser = async (req, res, next) => {
 	const idToken = req.headers.authorization;
 	try {
 		const decodedToken = await admin.auth().verifyIdToken(idToken);
 		req.user = decodedToken;
-		console.log(req.user)
+		// console.log(req.method, req.url, req.user.uid)
+		
 		next();
 	} catch (error) {
+		console.log("Request auth error: " + error)
 		res.status(401).json({ error: "Unauthorized" });
 	}
 };
@@ -54,35 +58,35 @@ app.get('/page/:pageId', authenticateUser, async (req, res) => {
 app.get("/image/:id", async (req, res) => {
 	const blockID = req.params.id;
 
-	console.log(blockID)
+	// console.log(blockID)
 	var headers = {}
 	headers.Cookie = "__cf_bm=DdXn9cIqMcUlhHfo7YYemQFB9H7sDAQiK0ODVZBOdC4-1711303012-1.0.1.1-qf3WSigAYTU2jRWpM1OkO9HbkvgpQZN5PGHOxVnVNuZtVeLRmpZOchLHL63kJTroZLeVreePz0eKYrP0dlhCFg; _cfuvid=Z7Q9V16Lex9St8hXT0bDYSDGd4ezmWJLtX.lYaNVi0w-1711234509468-0.0.1.1-604800000; device_id=698055d5-260a-4b57-bd9f-a1bc22d15791; notion_browser_id=3ae54f5c-896c-47fb-a958-65199555f6e3; notion_check_cookie_consent=false; token_v2=" + notionOAuth.userToken
 	// console.log(url)
 	// console.log(headers)
-	console.log(req.query)
+	// console.log(req.query)
 	var url = "https://www.notion.so/image/" + encodeURIComponent(blockID) + "?" + new URLSearchParams({"table": req.query.table, "id": req.query.id, "cache": req.query.cache})
 	var image = await fetch(url, {headers: headers})
 
 	// pipe the image to the response
 	const imageBuffer = await image.arrayBuffer()
-	console.log(imageBuffer)
+	// console.log(imageBuffer)
 	res.set("Content-Type", image.headers.get("Content-Type"))
 	res.send(Buffer.from(imageBuffer));
 })
 
 app.get("/notion/auth/redirect", async (req, res) => {
 	const code = req.query.code;
-	console.log(req.query)
-	console.log(code)
+	// console.log(req.query)
+	// console.log(code)
 	const client = new Client();
 	const response = await client.oauth.token({
 		code: code,
 		client_id: notionOAuth.clientID,
 		client_secret: notionOAuth.clientSecret,
-		redirect_uri: "https://api.lms.toddr.org/notion/auth/redirect",
+		redirect_uri: "http://localhost:3001/notion/auth/redirect",
 		grant_type: "authorization_code"
 	})
-	console.log(response)
+	// console.log(response)
 	const workspace = response.workspace_id
 	const token = response.access_token
 	// write to file
@@ -114,12 +118,21 @@ app.get("/enrollments/my", authenticateUser, async (req, res) => {
 })
 
 app.get("/course/:id", authenticateUser, async (req, res) => {
-	const courseID = req.params.id;
-	var courseDoc = await db.collection("Course").doc(courseID).get();
-	var course = courseDoc.data();
+	var course = coursesCache.find((course) => course.id == req.params.id)
+	if (course == undefined) {
+		var querySnapshot = await db.collection("Course").get();
+		querySnapshot.forEach((doc) => {
+			coursesCache.push(doc.data());
+		})
+	}
+	course = coursesCache.find((course) => course.id == req.params.id)
+	// const courseID = req.params.id;
+	// var courseDoc = await db.collection("Course").doc(courseID).get();
+	// var course = courseDoc.data();
+	// console.log(coursesCache.find((course) => course.id == req.params.id))
 	res.json(course);
 })
 
 app.listen(3001, () => {
-	console.log('Server started on https://api.lms.toddr.org');
+	console.log('Server started on http://localhost:3001');
 })

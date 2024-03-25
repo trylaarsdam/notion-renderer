@@ -1,5 +1,3 @@
-"use client";
-
 import * as React from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -41,7 +39,7 @@ export default function CoursePage({ courseId }) {
         console.log("user is logged out");
       }
 
-      const response = await fetch(`https://api.lms.toddr.org/course/${courseId}`, {
+      const response = await fetch(`http://localhost:3001/course/${courseId}`, {
         headers: {
           Authorization: `${await auth.currentUser?.getIdToken()}`,
         },
