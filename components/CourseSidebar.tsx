@@ -45,7 +45,9 @@ export function NavbarSimple({}) {
         onClick={(event) => {
           console.log(router.route);
           event.preventDefault();
-          window.location.href = item.link;
+		  if (!item.link.endsWith("undefined")) {
+			window.location.href = item.link;
+		  }
         }}
       >
         <item.icon className={classes.linkIcon} stroke={1.5} />
